@@ -11,16 +11,19 @@ namespace BankingTests
 {
     public class BankAccountTests
     {
+        private decimal _balance;
+        BankAccount _account;
+
+        public BankAccountTests()
+        {
+            _account = new BankAccount(new DummyBonusCalculator());
+            _balance = _account.GetBalance();
+        }
+
         [Fact]
         public void NewAccountsHaveCorrectBalance()
         {
-          
-            // Given
-            var account = new BankAccount();
-            // When
-            decimal balance = account.GetBalance();
-            // Then
-            Assert.Equal(5000M, balance);
+            Assert.Equal(5000M, _balance);
         }
 
         [Fact]
@@ -28,30 +31,35 @@ namespace BankingTests
         {
             // WTCYWYH
             // Given
-            var account = new BankAccount();
-            var openingBalance = account.GetBalance();
+            var balance = _account.GetBalance();
             var amountToDeposit = 42M;
             // When
-            account.Deposit(amountToDeposit);
+            _account.Deposit(amountToDeposit);
             // Then
             Assert.Equal(
-                openingBalance + amountToDeposit,
-                account.GetBalance()
+                balance + amountToDeposit,
+                _account.GetBalance()
                 );
         }
 
         [Fact]
         public void WithdrawalsDecreaseTheBalance()
         {
-            var account = new BankAccount();
-            var openingBalance = account.GetBalance();
             var amountToWithdraw = 42M;
 
-            account.Withdraw(amountToWithdraw);
+            _account.Withdraw(amountToWithdraw);
 
             Assert.Equal(
-                openingBalance - amountToWithdraw,
-                account.GetBalance());
+                _balance - amountToWithdraw,
+                _account.GetBalance());
+        }
+    }
+
+    public class DummyBonusCalculator : ICanCalculateBankAccountBonuses
+    {
+        public decimal For(decimal balance, decimal amountToDeposit)
+        {
+            return 0;
         }
     }
 }
