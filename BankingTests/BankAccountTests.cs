@@ -10,45 +10,44 @@ namespace BankingTests
 {
     public class BankAccountTests
     {
+        private BankAccount _account;
+        private decimal _balance;
+
+        public BankAccountTests()
+        {
+            _account = new BankAccount();
+            _balance = _account.GetBalance();
+        }
+
         [Fact]
         public void NewAccountsHaveCorrectBalance()
         {
-            // Given
-            var account = new BankAccount();
-            // When
-            decimal balance = account.GetBalance();
-            // Then
-            Assert.Equal(5000M, balance);
+            Assert.Equal(5000M, _balance);
         }
 
         [Fact]
         public void DepositsIncreaseTheBalance()
         {
-            // Given
-            var account = new BankAccount();
-            var openingBalance = account.GetBalance();
+            
             var amountToDeposit = 42M;
-            // When
-            account.Deposit(amountToDeposit);
-            // Then
+            _account.Deposit(amountToDeposit);
             Assert.Equal(
-                openingBalance + amountToDeposit,
-                account.GetBalance()
+                _balance + amountToDeposit,
+                _account.GetBalance()
                 );
         }
 
         [Fact]
         public void WithdrawalsDecreaseTheBalance()
         {
-            var account = new BankAccount();
-            var openingBalance = account.GetBalance();
             var amountToWithdraw = 42M;
 
-            account.Withdraw(amountToWithdraw);
+            _account.Withdraw(amountToWithdraw);
 
             Assert.Equal(
-                openingBalance - amountToWithdraw,
-                account.GetBalance());
+                _balance - amountToWithdraw,
+                _account.GetBalance()
+                );
         }
     }
 }
