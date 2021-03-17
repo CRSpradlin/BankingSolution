@@ -18,7 +18,10 @@ namespace BankingTests
         public BankAccountTests()
         {
             //Just created a blank Mock because the object simply returns the default decimal value of 0
-            _account = new BankAccount(new Mock<ICanCalculateBankAccountBonuses>().Object);
+            _account = new BankAccount(
+                new Mock<ICanCalculateBankAccountBonuses>().Object,
+                new Mock<INotifyTheFeds>().Object
+                );
             _balance = _account.GetBalance();
         }
 
