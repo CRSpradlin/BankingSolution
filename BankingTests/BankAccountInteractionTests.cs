@@ -1,4 +1,5 @@
 ﻿using BankingDomain;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,36 +14,17 @@ namespace BankingTests
         [Fact]
         public void DepositUsesTheBonusCalculator()
         {
-            var stubbedBonusCaculator = new StubbedBonusCalculator();
-            var account = new BankAccount(stubbedBonusCaculator);
+            var stubbedCalculator = new Mock<ICanCalculateBankAccountBonuses>();
+            var account = new BankAccount(stubbedCalculator.Object);
             var openingBalance = account.GetBalance();
             var amountToDeposit = 10M;
-
-            stubbedBonusCaculator.AmountToReturn = 42;
-            stubbedBonusCaculator.ExpectedAmountOfDeposit = amountToDeposit;
-            stubbedBonusCaculator.ExpectedBalance = openingBalance;
+            stubbedCalculator
+                .Setup(c => c.For(openingBalance, amountToDeposit))
+                .Returns(42);
 
             account.Deposit(amountToDeposit);
 
             Assert.Equal(openingBalance + amountToDeposit + 42, account.GetBalance());
-        }
-    }
-
-    public class StubbedBonusCalculator : ICanCalculateBankAccountBonuses
-    {
-        public decimal ExpectedBalance;
-        public decimal ExpectedAmountOfDeposit;
-        public decimal AmountToReturn;
-        
-        public decimal For(decimal balance, decimal amountToDeposit)
-        {
-            if(balance == ExpectedBalance && amountToDeposit == ExpectedAmountOfDeposit)
-            {
-                return AmountToReturn;
-            } else
-            {
-                return -10; // something dumb, to make sure everything is working right
-            }
         }
     }
 }
