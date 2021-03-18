@@ -24,9 +24,10 @@ namespace BankingTests
             {
                 // Ignore that.
             }
-            
-            
-            Assert.Equal(openingBalance, account.GetBalance());
+            finally
+            {
+                Assert.Equal(openingBalance, account.GetBalance());
+            }
         }
 
         [Fact]
