@@ -35,6 +35,10 @@ namespace BankingDomain
 
         public void Withdraw(decimal amountToWithdraw)
         {
+            if(amountToWithdraw > _balance)
+            {
+                throw new OverdraftException();
+            }
             _fedNotifier.NotifyOfWithdrawal(this, amountToWithdraw);
             _balance -= amountToWithdraw;
         }
